@@ -1,0 +1,64 @@
+---
+title: "Shiny-seq: Making Bioinformatics Accessible"
+author: "Todd Farmer"
+date: "02/05/2020"
+output: ioslides_presentation
+---
+
+<style>
+pre {
+  font-size: 10px;
+}
+</style>
+
+```{r libraries, echo=FALSE}
+library(Seurat)
+library(grid)
+library(gridExtra)
+library(ggplot2)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+```  
+
+## <font size="6">Single Cell RNA Sequencing (scRNA-seq)</font>  
+
+The most basic question of molecular biology: Which cells express my gene of interest?</font> 
+
+<font size="5">Single Cell RNA Sequencing (scRNA-seq) can answer this question in ways that was previously impossible</font>   
+<font size="4">- Uses microfluidics to capture a single cell with a uniquely tagged bead</font>  
+<font size="4">- Quantifies tens of thousands of genes in thousands of cells simultaneously</font>  
+
+<font size="5">However, scRNA-seq analysis is out of reach for the majority of biologists because it requires advanced computer programming and statistics to analyze including:</font>  
+<font size="4">- SQL, R, python, and bash</font>  
+<font size="4">- linear regression, logirithmic scaling, Principal Component Analysis</font>  
+<font size="4">- Nearest-Neighbor clustering, dimension reduction (tSNE, UMAP)</font> 
+
+## <font size="6">The Shiny-seq App: Input Data</font>
+  
+<font size="4">Shiny-seq allows for someone with no experience in computer science to query which cells express their gene of interest. 
+It loads a scRNA-seq dataset [(Saunders et. al, 2018)](https://www.cell.com/cell/fulltext/S0092-8674(18)30955-3?) that has been preprocessed with the R package [Seurat](https://satijalab.org/seurat/):</font>  
+```{r data, echo = TRUE}
+scRNAseqData <- readRDS("GP_downsample.RDS")
+scRNAseqData
+```
+<font size="4">It then runs a query for a user entered gene and returns expression plots displaying which cells express the gene of interest.</font> 
+
+
+## <font size="6">The Shiny-seq App Output</font>  
+<font size="4">Shiny-seq will output two plots that allow the end user to detirmine which cells express the gene of interest.</font> 
+
+```{r plot, echo=TRUE, out.height="300px", results='hold'}
+
+f <- FeaturePlot(scRNAseqData, features = "Slc1a2")
+v <- VlnPlot(scRNAseqData, features = "Slc1a2", group.by = "class") + theme(legend.position = "none")
+grid.arrange(f, v, ncol = 2)
+```
+
+## <font size="6">Where to find Shiny-seq</font>
+The app can be found at: [https://wtoddfarmer.shinyapps.io/Shiny-seq/](https://wtoddfarmer.shinyapps.io/Shiny-seq/)  
+
+The source can be found at: [https://github.com/wtoddfarmer/shiny-seq](https://github.com/wtoddfarmer/shiny-seq) 
+
